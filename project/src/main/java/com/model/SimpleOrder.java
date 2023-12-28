@@ -1,21 +1,33 @@
 package com.model;
 
 import java.util.Date;
+import java.util.Vector;
 
 public class SimpleOrder implements Order{
-    private Product[] products;
+    private Vector<Product> products;
     private Customer customer;
     private Double shipmentFees;
     private Date arrivedAt;
     private Integer orderId;
+
+    public SimpleOrder(Vector<Product> products, Customer customer, Double shipmentFees, Date arrivedAt, Integer orderId) {
+        this.products = products;
+        this.customer = customer;
+        this.shipmentFees = shipmentFees;
+        this.arrivedAt = arrivedAt;
+        this.orderId = orderId;
+    }
+
     @Override
-    public Product[] getProducts() {
+    public Vector<Product> getProducts() {
         return products;
     }
 
     @Override
-    public Customer getCustomer() {
-        return customer;
+    public Vector<Customer> getCustomer() {
+        Vector<Customer> customers = new Vector<>();
+        customers.add(customer);
+        return customers;
     }
 
     @Override
@@ -32,7 +44,7 @@ public class SimpleOrder implements Order{
         return shipmentFees;
     }
 
-    public void setProducts(Product[] products) {
+    public void setProducts(Vector<Product> products) {
         this.products = products;
     }
 
