@@ -15,9 +15,6 @@ public class StatisticsController {
     @Autowired
     private IStatisticsService statisticsService;
 
-    @Autowired
-    private IDatabaseService databaseService;
-
     @GetMapping("/most-email")
     public String getMostEmail() {
         String mostEmail = statisticsService.getMostEmail();

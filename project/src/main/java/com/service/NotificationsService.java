@@ -1,17 +1,25 @@
 package com.service;
 
+import com.model.CompoundOrder;
 import com.model.Order;
-import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.PriorityQueue;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class NotificationsService implements INotificationsService {
-    private Map<Integer, Order> orderQueue;
+    @Autowired
+    private IDatabaseService databaseService;
 
-    NotificationsService() {
-        this.orderQueue = new HashMap<>();
+    private CompoundOrdersService compoundOrdersService;
+    private SimpleOrdersService simpleOrdersService;
+
+    @Autowired
+    public NotificationsService(CompoundOrdersService compoundOrdersService, SimpleOrdersService simpleOrdersService) {
+        this.compoundOrdersService = compoundOrdersService;
+        this.simpleOrdersService = simpleOrdersService;
     }
 
     @Override
@@ -20,32 +28,41 @@ public class NotificationsService implements INotificationsService {
     }
 
     @Override
-    public Order insertNewOrder(Order order) {
-        this.orderQueue.put(order.getOrderId(), order);
-        return order;
-    }
-
-    @Override
-    public Order[] getQueue() {
-        return this.orderQueue.values().toArray(new Order[0]);
-    }
-
-    @Override
-    public Boolean cancelOrder(Integer orderId) {
-        this.orderQueue.remove(orderId);
-        // return amount to users --------------------
-        return true;
-    }
-
-    @Override
     public Boolean sendShipmentNotification() {
-        for (Order order : this.orderQueue.values()) {
+        System.out.println("Sending shipment notifications");
+        for (Order order : databaseService.getOrderQueue()) {
             if (order.getArrivedAt().getTime() <= System.currentTimeMillis()) {
                 // send notification
-                this.orderQueue.remove(order.getOrderId());
-                // deduct fees from users --------------------
+                IOrdersService ordersService;
+                if (order instanceof CompoundOrder) {
+                    ordersService = compoundOrdersService;
+                } else {
+                    ordersService = simpleOrdersService;
+                }
+                databaseService.removeOrder(order.getOrderId());
+                ordersService.payShipment(order);
             }
         }
         return true;
+    }
+
+    @Override
+    public PriorityQueue<Order> getOrdersQueue() {
+        Order orders[] = databaseService.getOrderQueue();
+        System.out.println("Products size: " + orders.length);
+        // specify a comparison for the priority queue
+        PriorityQueue<Order> ordersQueue = new PriorityQueue<Order>((Order o1, Order o2) -> {
+            if (o1.getArrivedAt().getTime() < o2.getArrivedAt().getTime()) {
+                return -1;
+            } else if (o1.getArrivedAt().getTime() > o2.getArrivedAt().getTime()) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+        for (Order order : orders) {
+            ordersQueue.add(order);
+        }
+        return ordersQueue;
     }
 }

@@ -7,12 +7,27 @@ public class CompoundOrder implements Order{
     private Order[] orders;
     private Integer orderId;
     private Date arrivedAt;
+    private Double cost;
 
+    
 
     public CompoundOrder(Order[] orders, Integer orderId, Date arrivedAt) {
         this.orders = orders;
         this.orderId = orderId;
         this.arrivedAt = arrivedAt;
+        calculateCost();
+    }
+
+    private void calculateCost(){
+        cost = 0.0;
+        for (Order order : orders){
+            cost += order.getCost();
+        }
+    }
+
+    @Override
+    public Double getCost() {
+        return cost;
     }
 
     @Override

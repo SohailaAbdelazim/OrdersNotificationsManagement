@@ -13,8 +13,15 @@ public class NotificationTimer {
     @Autowired
     private INotificationsService notificationsService;
 
-    public Boolean start(){
-        scheduler.scheduleAtFixedRate(notificationsService::sendShipmentNotification, 0, 1, TimeUnit.SECONDS);
-        return true;
+    public NotificationTimer() {
+        // scheduler.scheduleAtFixedRate(notificationsService::sendShipmentNotification, 0, 1, TimeUnit.SECONDS);
+        // fix it because doesn't loop forever
+        scheduler.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Sending notification");
+                notificationsService.sendShipmentNotification();
+            }
+        }, 0, 1, TimeUnit.SECONDS);
     }
 }

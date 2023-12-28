@@ -9,4 +9,5 @@ public interface Order {
     public Integer getOrderId();
     public Date getArrivedAt();
     public Double getShipmentFees();
+    public Double getCost();
 }

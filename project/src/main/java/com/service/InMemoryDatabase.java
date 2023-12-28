@@ -4,6 +4,7 @@ import com.model.ArabicTemplate;
 import com.model.Category;
 import com.model.Customer;
 import com.model.EnglishTemplate;
+import com.model.Order;
 import com.model.Product;
 import com.model.Template;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,8 @@ public class InMemoryDatabase implements IDatabaseService {
     private Map<String, Customer> loggedUsers;
     // template with his Number Of Usage
     private Map<Template, Integer> templates;
+    // order id with his order
+    private Map<Integer, Order> orderQueue;
     private Integer lastOrderId;
 
     InMemoryDatabase() {
@@ -27,6 +30,7 @@ public class InMemoryDatabase implements IDatabaseService {
         products = new HashMap<>();
         loggedUsers = new HashMap<>();
         templates = new HashMap<>();
+        this.orderQueue = new HashMap<>();
         lastOrderId = 1;
         init();
     }
@@ -116,5 +120,27 @@ public class InMemoryDatabase implements IDatabaseService {
     @Override
     public void removeLoggedCustomer(String username) {
         this.loggedUsers.remove(username);
+    }
+
+    @Override
+    public Order insertNewOrder(Order order) {
+        this.orderQueue.put(order.getOrderId(), order);
+        return order;
+    }
+
+    @Override
+    public Order[] getOrderQueue() {
+        return this.orderQueue.values().toArray(new Order[0]);
+    }
+
+    @Override
+    public Boolean removeOrder(Integer orderId) {
+        this.orderQueue.remove(orderId);
+        return true;
+    }
+
+    @Override
+    public Order getOrder(Integer orderId) {
+        return this.orderQueue.get(orderId);
     }
 }

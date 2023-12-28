@@ -1,6 +1,7 @@
 package com.service;
 
 import com.model.Customer;
+import com.model.Order;
 import com.model.Product;
 import com.model.Template;
 
@@ -18,4 +19,8 @@ public interface IDatabaseService {
     public void addCustomer(String username, Customer customer);
     public Boolean isCustomerLogged(String username);
     public void removeLoggedCustomer(String username);
+    public Order insertNewOrder(Order order);
+    public Order[] getOrderQueue();
+    public Order getOrder(Integer orderId);
+    public Boolean removeOrder(Integer orderId);
 }

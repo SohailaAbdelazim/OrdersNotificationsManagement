@@ -9,6 +9,7 @@ public class SimpleOrder implements Order{
     private Double shipmentFees;
     private Date arrivedAt;
     private Integer orderId;
+    private Double cost;
 
     public SimpleOrder(Vector<Product> products, Customer customer, Double shipmentFees, Date arrivedAt, Integer orderId) {
         this.products = products;
@@ -16,6 +17,19 @@ public class SimpleOrder implements Order{
         this.shipmentFees = shipmentFees;
         this.arrivedAt = arrivedAt;
         this.orderId = orderId;
+        calculateCost();
+    }
+
+    private void calculateCost(){
+        cost = 0.0;
+        for (Product product : products){
+            cost += product.getPrice();
+        }
+    }
+
+    @Override
+    public Double getCost() {
+        return cost;
     }
 
     @Override
