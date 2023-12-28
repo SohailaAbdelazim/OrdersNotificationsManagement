@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class NotificationTimer {
@@ -13,6 +14,7 @@ public class NotificationTimer {
     private INotificationsService notificationsService;
 
     public Boolean start(){
-        return null;
+        scheduler.scheduleAtFixedRate(notificationsService::sendShipmentNotification, 0, 1, TimeUnit.SECONDS);
+        return true;
     }
 }

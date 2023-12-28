@@ -10,6 +10,17 @@ public class Customer {
     private Double balance;
     private Integer numberOfOrders;
 
+    public Customer(String username, String password, String name, String email, Language language, String location, Double balance) {
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.email = email;
+        this.language = language;
+        this.location = location;
+        this.balance = balance;
+        this.numberOfOrders = 0;
+    }
+
     public String getUsername() {
         return username;
     }

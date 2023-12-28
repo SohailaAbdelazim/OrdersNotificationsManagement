@@ -14,4 +14,8 @@ public interface IDatabaseService {
     public Map<Template, Integer> getTemplates();
     public Integer getLastOrderId();
     public void increaseLastOrderId();
+    public void addUserToLoggedUsers(String username, Customer customer);
+    public void addCustomer(String username, Customer customer);
+    public Boolean isCustomerLogged(String username);
+    public void removeLoggedCustomer(String username);
 }

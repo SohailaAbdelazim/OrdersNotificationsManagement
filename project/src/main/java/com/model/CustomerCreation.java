@@ -5,9 +5,19 @@ public class CustomerCreation {
     private String password;
     private String name;
     private String email;
-    private Language language;
+    private String language;
     private String location;
     private Double balance;
+
+    public CustomerCreation(String username, String password, String name, String email, String language, String location, Double balance) {
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.email = email;
+        this.language = language;
+        this.location = location;
+        this.balance = balance;
+    }
 
     public String getUsername() {
         return username;
@@ -25,7 +35,7 @@ public class CustomerCreation {
         return email;
     }
 
-    public Language getLanguage() {
+    public String getLanguage() {
         return language;
     }
 
@@ -53,7 +63,7 @@ public class CustomerCreation {
         this.email = email;
     }
 
-    public void setLanguage(Language language) {
+    public void setLanguage(String language) {
         this.language = language;
     }
 

@@ -8,6 +8,15 @@ public class Product {
     private Category category;
     private Integer stock;
 
+    public Product(Integer serialNumber, String name, String vendor, Double price, Category category, Integer stock) {
+        this.serialNumber = serialNumber;
+        this.name = name;
+        this.vendor = vendor;
+        this.price = price;
+        this.category = category;
+        this.stock = stock;
+    }
+
     public Integer getSerialNumber() {
         return serialNumber;
     }
