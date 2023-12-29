@@ -11,19 +11,18 @@ import com.model.OrderCreation;
 
 @Service
 public abstract class IOrdersService {
-    @Autowired
     protected IDatabaseService databaseService;
 
-    public abstract Order createOrder(OrderCreation[] orderCreation);
-    public abstract Boolean payShipment(Order order);
-    public Boolean cancelOrder(Integer orderId) {
-        Order order = databaseService.getOrder(orderId);
-        Double cost = order.getCost();
-        Vector<Customer> customers = order.getCustomer();
-        for (Customer customer : customers) {
-            customer.setBalance(customer.getBalance() + cost);
-        }
-        databaseService.removeOrder(order.getOrderId());
-        return true;
+    @Autowired
+    public IOrdersService(IDatabaseService databaseService) {
+        this.databaseService = databaseService;
     }
+
+    public abstract Order createOrder(OrderCreation[] orderCreation);
+
+    protected abstract Order untilCreateSimpleOrder(OrderCreation[] orderCreation);
+
+    public abstract Boolean payShipment(Order order);
+
+    public abstract Boolean cancelOrder(Integer orderId);
 }

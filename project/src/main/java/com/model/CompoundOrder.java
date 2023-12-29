@@ -1,15 +1,17 @@
 package com.model;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
-public class CompoundOrder implements Order{
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+public class CompoundOrder implements Order {
     private Order[] orders;
     private Integer orderId;
     private Date arrivedAt;
     private Double cost;
-
-    
 
     public CompoundOrder(Order[] orders, Integer orderId, Date arrivedAt) {
         this.orders = orders;
@@ -18,9 +20,9 @@ public class CompoundOrder implements Order{
         calculateCost();
     }
 
-    private void calculateCost(){
+    private void calculateCost() {
         cost = 0.0;
-        for (Order order : orders){
+        for (Order order : orders) {
             cost += order.getCost();
         }
     }
@@ -30,24 +32,26 @@ public class CompoundOrder implements Order{
         return cost;
     }
 
+    @JsonIgnore
     @Override
-    public Vector<Product> getProducts() {
-        Vector<Product> products = new Vector<>();
+    public Map<Product, Integer> getProducts() {
+        Map<Product, Integer> products = new HashMap<>();
         for (Order order : orders) {
-            Product productArray[] = order.getProducts().toArray(new Product[0]);
-            for (Product product : productArray){
-                products.add(product);
+            Map<Product, Integer> subProducts = order.getProducts();
+            for (Map.Entry<Product, Integer> entry : subProducts.entrySet()) {
+                products.put(entry.getKey(), entry.getValue());
             }
         }
         return products;
     }
 
+    @JsonIgnore
     @Override
     public Vector<Customer> getCustomer() {
         Vector<Customer> customers = new Vector<>();
         for (Order order : orders) {
             Vector<Customer> customerArray = order.getCustomer();
-            for (Customer customer : customerArray){
+            for (Customer customer : customerArray) {
                 customers.add(customer);
             }
         }
@@ -81,10 +85,28 @@ public class CompoundOrder implements Order{
     }
 
     public Double getShipmentFees() {
+        String location = null;
+        Boolean inSameLocation = true;
         Double fees = 0.0;
-        for (Order order: orders){
+
+        Vector<Customer> customers = getCustomer();
+        for (Customer customer : customers) {
+            if (location == null)
+                location = customer.getLocation();
+            else {
+                if (!location.equals(customer.getLocation())) {
+                    inSameLocation = false;
+                    break;
+                }
+            }
+        }
+
+        if (inSameLocation)
+            return orders[0].getShipmentFees() / customers.size();
+
+        for (Order order : orders) {
             fees += order.getShipmentFees();
         }
-        return fees;
+        return fees / customers.size();
     }
 }

@@ -84,4 +84,12 @@ public class Customer {
     public void setNumberOfOrders(Integer numberOfOrders) {
         this.numberOfOrders = numberOfOrders;
     }
+
+    public void increaseNumberOfOrders() {
+        this.numberOfOrders++;
+    }
+
+    public void decreaseNumberOfOrders() {
+        this.numberOfOrders--;
+    }
 }

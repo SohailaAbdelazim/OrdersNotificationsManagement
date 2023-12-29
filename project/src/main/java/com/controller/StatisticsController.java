@@ -16,9 +16,9 @@ public class StatisticsController {
     private IStatisticsService statisticsService;
 
     @GetMapping("/most-email")
-    public String getMostEmail() {
-        String mostEmail = statisticsService.getMostEmail();
-        return "The most email is: " + mostEmail + ".";
+    public String[] getMostEmail() {
+        String[] mostEmails = statisticsService.getMostEmail();
+        return mostEmails;
     }
 
     @GetMapping("/most-template")

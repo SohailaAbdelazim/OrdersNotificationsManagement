@@ -1,17 +1,22 @@
 package com.model;
 
 import java.util.Date;
+import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
-public class SimpleOrder implements Order{
-    private Vector<Product> products;
+import com.fasterxml.jackson.annotation.JsonGetter;
+
+public class SimpleOrder implements Order {
+    private Map<Product, Integer> products;
     private Customer customer;
     private Double shipmentFees;
     private Date arrivedAt;
     private Integer orderId;
     private Double cost;
 
-    public SimpleOrder(Vector<Product> products, Customer customer, Double shipmentFees, Date arrivedAt, Integer orderId) {
+    public SimpleOrder(Map<Product, Integer> products, Customer customer, Double shipmentFees, Date arrivedAt,
+            Integer orderId) {
         this.products = products;
         this.customer = customer;
         this.shipmentFees = shipmentFees;
@@ -20,10 +25,15 @@ public class SimpleOrder implements Order{
         calculateCost();
     }
 
-    private void calculateCost(){
+    @JsonGetter("products")
+    public Set<Product> getProductKeys() {
+        return this.products.keySet();
+    }
+
+    private void calculateCost() {
         cost = 0.0;
-        for (Product product : products){
-            cost += product.getPrice();
+        for (Map.Entry<Product, Integer> entry : products.entrySet()) {
+            cost += entry.getKey().getPrice() * entry.getValue();
         }
     }
 
@@ -33,7 +43,7 @@ public class SimpleOrder implements Order{
     }
 
     @Override
-    public Vector<Product> getProducts() {
+    public Map<Product, Integer> getProducts() {
         return products;
     }
 
@@ -58,7 +68,7 @@ public class SimpleOrder implements Order{
         return shipmentFees;
     }
 
-    public void setProducts(Vector<Product> products) {
+    public void setProducts(Map<Product, Integer> products) {
         this.products = products;
     }
 

@@ -4,6 +4,7 @@ import com.model.Customer;
 import com.model.Template;
 
 import java.util.Map;
+import java.util.Vector;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,15 +15,20 @@ public class StatisticsService implements IStatisticsService{
     private IDatabaseService databaseService;
 
     @Override
-    public String getMostEmail() {
+    public String[] getMostEmail() {
         Map<String, Customer> customers = databaseService.getCustomers();
-        Customer bestCustomer = null;
+        Vector<String> bestCustomer = new Vector<>();
+        Integer bestCustomerCount = 0;
         for (Customer customer : customers.values()) {
-            if (bestCustomer == null || customer.getNumberOfOrders() > bestCustomer.getNumberOfOrders()) {
-                bestCustomer = customer;
+            if(customer.getNumberOfOrders() > bestCustomerCount) {
+                bestCustomerCount = customer.getNumberOfOrders();
+                bestCustomer = new Vector<>();
+                bestCustomer.add(customer.getEmail());
+            } else if (customer.getNumberOfOrders() == bestCustomerCount) {
+                bestCustomer.add(customer.getEmail());
             }
         }
-        return bestCustomer.getEmail() == null ? bestCustomer.getEmail() : "No email";
+        return bestCustomer.toArray(new String[bestCustomer.size()]);
     }
 
     @Override

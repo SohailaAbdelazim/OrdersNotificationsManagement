@@ -1,12 +1,15 @@
 package com.controller;
 
+import com.model.CompoundOrder;
 import com.model.Order;
 import com.model.OrderCreation;
 import com.model.ProductCreation;
 import com.model.Response;
 import com.service.CompoundOrdersService;
+import com.service.IDatabaseService;
 import com.service.IOrdersService;
 import com.service.SimpleOrdersService;
+import com.validator.IValidationService;
 
 import java.util.Map;
 
@@ -22,15 +25,25 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrdersController {
     private SimpleOrdersService simpleOrdersService;
     private CompoundOrdersService compoundOrdersService;
+    protected IDatabaseService databaseService;
+    private IValidationService validationService;
 
     @Autowired
-    public OrdersController(SimpleOrdersService simpleOrdersService, CompoundOrdersService compoundOrdersService) {
+    public OrdersController(SimpleOrdersService simpleOrdersService, CompoundOrdersService compoundOrdersService,
+            IDatabaseService databaseService, IValidationService validationService) {
         this.simpleOrdersService = simpleOrdersService;
         this.compoundOrdersService = compoundOrdersService;
+        this.databaseService = databaseService;
+        this.validationService = validationService;
     }
 
     @PostMapping("/create/simple")
     public Order getSimpleOrder(@RequestBody ProductCreation[] products, @RequestHeader Map<String, String> headers) {
+        String username = headers.get("username");
+        String password = headers.get("password");
+        if (!validationService.checkAuthentication(username, password)) {
+            return null;
+        }
         OrderCreation orderCreation[] = new OrderCreation[1];
         orderCreation[0] = new OrderCreation(headers.get("username"), products);
         Order order = simpleOrdersService.createOrder(orderCreation);
@@ -38,15 +51,36 @@ public class OrdersController {
     }
 
     @PostMapping("/create/compound")
-    public Order getCompoundOrder(@RequestBody OrderCreation[] orders) {
+    public Order getCompoundOrder(@RequestBody OrderCreation[] orders, @RequestHeader Map<String, String> headers) {
+        String username = headers.get("username");
+        String password = headers.get("password");
+        if (!validationService.checkAuthentication(username, password)) {
+            return null;
+        }
         Order order = compoundOrdersService.createOrder(orders);
         return order;
     }
 
     @PostMapping("/cancel")
-    public Response cancelOrder(@RequestBody Map<String, Integer> body) {
-        IOrdersService ordersService = new SimpleOrdersService();
-        Boolean isSuccess = ordersService.cancelOrder(body.get("orderId"));
+    public Response cancelOrder(@RequestBody Map<String, Integer> body, @RequestHeader Map<String, String> headers) {
+        String username = headers.get("username");
+        String password = headers.get("password");
+        Integer orderId = body.get("orderId");
+        if (!validationService.checkAuthentication(username, password)
+                || !validationService.checkAuthorizationOfOrder(username, orderId)) {
+            return null;
+        }
+        Order order = databaseService.getOrder(orderId);
+        Boolean isSuccess;
+        if (order != null) {
+            if (order instanceof CompoundOrder) {
+                isSuccess = compoundOrdersService.cancelOrder(orderId);
+            } else {
+                isSuccess = simpleOrdersService.cancelOrder(orderId);
+            }
+        } else {
+            isSuccess = false;
+        }
         Response response = new Response();
         response.setStatus(isSuccess);
         response.setMessage("Cancelling order " + (isSuccess ? "Success" : "Failed"));

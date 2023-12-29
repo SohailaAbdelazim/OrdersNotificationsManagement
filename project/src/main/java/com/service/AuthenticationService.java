@@ -7,11 +7,15 @@ import com.model.Customer;
 import com.model.CustomerCreation;
 import com.model.Language;
 import com.model.UserCredentials;
+import com.validator.IValidationService;
 
 @Service
 public class AuthenticationService implements IAuthenticationService {
     @Autowired
     private IDatabaseService databaseService;
+
+    @Autowired
+    private IValidationService validationService;
 
     @Override
     public Boolean login(UserCredentials user) {
@@ -27,8 +31,13 @@ public class AuthenticationService implements IAuthenticationService {
 
     @Override
     public Boolean signup(CustomerCreation customer) {
-        // get user from database
+        // Verify if user exists
         Customer tmpCustomer = databaseService.getCustomer(customer.getUsername());
+        // check fields validation
+        if (!validationService.checkEmail(customer.getEmail())
+                || !validationService.checkStrongPassword(customer.getPassword())) {
+            return false;
+        }
         if (tmpCustomer == null) {
             // add user to database
             databaseService.addCustomer(customer.getUsername(), new Customer(
