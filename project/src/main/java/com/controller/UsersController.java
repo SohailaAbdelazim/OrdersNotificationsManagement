@@ -84,7 +84,10 @@ public class UsersController {
         String username = headers.get("username");
         String password = headers.get("password");
         if (!validationService.checkAuthentication(username, password)) {
-            return null;
+            Response response = new Response();
+            response.setStatus(false);
+            response.setMessage("Logout Failed");
+            return response;
         }
         Boolean isSuccess = authenticationService.logout(user);
         Response response = new Response();

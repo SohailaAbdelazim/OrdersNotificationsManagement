@@ -20,6 +20,9 @@ public class AuthenticationService implements IAuthenticationService {
     @Override
     public Boolean login(UserCredentials user) {
         // check user in database
+        if (databaseService.isCustomerLogged(user.getUsername())) {
+            return false;
+        }
         Customer customer = databaseService.getCustomer(user.getUsername());
         if (customer != null && customer.getPassword().equals(user.getPassword())) {
             // add user to logged users
@@ -58,12 +61,7 @@ public class AuthenticationService implements IAuthenticationService {
 
     @Override
     public Boolean logout(UserCredentials user) {
-        // check user in logged users
-        if (databaseService.isCustomerLogged(user.getUsername())) {
-            // remove user from logged users
-            databaseService.removeLoggedCustomer(user.getUsername());
-            return true;
-        }
-        return false;
+        databaseService.removeLoggedCustomer(user.getUsername());
+        return true;
     }
 }
