@@ -1,6 +1,7 @@
 package com.service;
 
 import com.model.Customer;
+import com.model.Language;
 import com.model.Order;
 import com.model.Product;
 import com.model.Template;
@@ -23,4 +24,5 @@ public interface IDatabaseService {
     public Order[] getOrderQueue();
     public Order getOrder(Integer orderId);
     public Boolean removeOrder(Integer orderId);
+    public void increaseTemplateUsage(Language language);
 }

@@ -15,6 +15,16 @@ public class StatisticsController {
     @Autowired
     private IStatisticsService statisticsService;
 
+    @GetMapping("")
+    public String home() {
+        // Pritn the instrctions for the user that can be done in this mapping
+        return "Welcome to the Statistics API!" +
+
+                "\n\nYou can use the following mappings:" +
+                "\n- GET /api/statistics/most-email - Get the most email(s) sent" +
+                "\n- GET /api/statistics/most-template - Get the most template(s) used";
+    }
+
     @GetMapping("/most-email")
     public String[] getMostEmail() {
         String[] mostEmails = statisticsService.getMostEmail();

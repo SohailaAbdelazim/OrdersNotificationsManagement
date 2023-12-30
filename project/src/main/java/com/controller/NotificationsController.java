@@ -14,6 +14,15 @@ import com.service.INotificationsService;
 public class NotificationsController {
     @Autowired
     private INotificationsService notificationsService;
+
+    @GetMapping("")
+    public String home() {
+        // Pritn the instrctions for the user that can be done in this mapping
+        return "Welcome to the Notifications API!" +
+
+                "\n\nYou can use the following mappings:" +
+                "\n- GET /api/notifications/queue - Get the orders queue";
+    }
     
     @GetMapping("/queue")
     public PriorityQueue<Order> getQueue() {

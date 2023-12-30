@@ -47,7 +47,9 @@ public class AuthenticationService implements IAuthenticationService {
                     customer.getEmail(),
                     customer.getLanguage().equalsIgnoreCase("english") ? Language.ENGLISH : Language.ARABIC,
                     customer.getLocation(),
-                    customer.getBalance()));
+                    customer.getBalance(),
+                    customer.getPhoneNumber(),
+                    customer.getNotificationMethods()));
             return true;
         } else {
             return false;

@@ -14,6 +14,7 @@ import com.validator.IValidationService;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -27,6 +28,38 @@ public class OrdersController {
     private CompoundOrdersService compoundOrdersService;
     protected IDatabaseService databaseService;
     private IValidationService validationService;
+
+    @GetMapping("")
+    public String home() {
+        // Pritn the instrctions for the user that can be done in this mapping
+        return "Welcome to the Orders API!" +
+
+                "\n\nYou can use the following mappings:" +
+
+                "\n- Post /api/orders/create/simple - Create a simple order" +
+                "\n\t- Headers: username, password" +
+                "\n\t- Body: products" +
+                "\n\t\t- products: ProductCreation[]" +
+                "\n\t\t\t- serialNumber: integer" +
+                "\n\t\t\t- amount: integer" +
+                "\n\t- Response: Order" +
+
+                "\n\n- Post /api/orders/create/compound - Create a compound order" +
+                "\n\t- Headers: username, password" +
+                "\n\t- Body: orders" +
+                "\n\t\t- orders: OrderCreation[]" +
+                "\n\t\t\t- username: string" +
+                "\n\t\t\t- products: ProductCreation[]" +
+                "\n\t\t\t\t- serialNumber: integer" +
+                "\n\t\t\t\t- amount: integer" +
+                "\n\t- Response: Order" +
+
+                "\n\n- Post /api/orders/cancel - Cancel an order" +
+                "\n\t- Headers: username, password" +
+                "\n\t- Body: orderId" +
+                "\n\t\t- orderId: int" +
+                "\n\t- Response: Response";
+    }
 
     @Autowired
     public OrdersController(SimpleOrdersService simpleOrdersService, CompoundOrdersService compoundOrdersService,
@@ -45,7 +78,7 @@ public class OrdersController {
             return null;
         }
         OrderCreation orderCreation[] = new OrderCreation[1];
-        orderCreation[0] = new OrderCreation(headers.get("username"), products);
+        orderCreation[0] = new OrderCreation(username, products);
         Order order = simpleOrdersService.createOrder(orderCreation);
         return order;
     }

@@ -4,6 +4,7 @@ import com.model.ArabicTemplate;
 import com.model.Category;
 import com.model.Customer;
 import com.model.EnglishTemplate;
+import com.model.Language;
 import com.model.Order;
 import com.model.Product;
 import com.model.Template;
@@ -19,8 +20,10 @@ public class InMemoryDatabase implements IDatabaseService {
     // product serial number with his product
     private Map<Integer, Product> products;
     private Map<String, Customer> loggedUsers;
-    // template with his Number Of Usage
-    private Map<Template, Integer> templates;
+    // Map each language with its template usage
+    private Map<Language, Integer> languagesUsage;
+    // Map each language with its template
+    private Map<Language, Template> templates;
     // order id with his order
     private Map<Integer, Order> orderQueue;
     private Integer lastOrderId;
@@ -30,12 +33,13 @@ public class InMemoryDatabase implements IDatabaseService {
         products = new HashMap<>();
         loggedUsers = new HashMap<>();
         templates = new HashMap<>();
+        this.languagesUsage = new HashMap<>();
         this.orderQueue = new HashMap<>();
         lastOrderId = 1;
-        init();
+        initiateFields();
     }
 
-    private void init() {
+    private void initiateFields() {
         // prepare the products
         Product[] tmpProducts = new Product[10];
         tmpProducts[0] = new Product(1, "Apple", "Apple Inc.", 1.0, Category.SUPERMARKET, 100);
@@ -52,13 +56,10 @@ public class InMemoryDatabase implements IDatabaseService {
             this.products.put(product.getSerialNumber(), product);
         }
 
-        // prepare templates
-        Template[] tmpTemplates = new Template[2];
-        tmpTemplates[0] = new ArabicTemplate();
-        tmpTemplates[1] = new EnglishTemplate();
-        for (Template template : tmpTemplates) {
-            this.templates.put(template, 0);
-        }
+        this.templates.put(Language.ARABIC, new ArabicTemplate());
+        this.templates.put(Language.ENGLISH, new EnglishTemplate());
+        this.languagesUsage.put(Language.ARABIC, 0);
+        this.languagesUsage.put(Language.ENGLISH, 0);
     }
 
     @Override
@@ -94,7 +95,16 @@ public class InMemoryDatabase implements IDatabaseService {
 
     @Override
     public Map<Template, Integer> getTemplates() {
-        return this.templates;
+        Map<Template, Integer> templatesWithUsage = new HashMap<>();
+        for (Map.Entry<Language, Template> entry : templates.entrySet()) {
+            templatesWithUsage.put(entry.getValue(), languagesUsage.get(entry.getKey()));
+        }
+        return templatesWithUsage;
+    }
+
+    @Override
+    public void increaseTemplateUsage(Language language) {
+        this.languagesUsage.put(language, this.languagesUsage.get(language) + 1);
     }
 
     @Override

@@ -51,9 +51,9 @@ public class SimpleOrdersService extends IOrdersService {
             Product targetProduct = databaseService.getProduct(product.getSerialNumber());
             targetProduct.setStock(targetProduct.getStock() - targetAmount);
         }
-        // create date equals to the current date + 10 seconds
+
         Date date = new Date();
-        date.setTime(date.getTime() + 20000);
+        date.setTime(date.getTime() + this.shipmentDurationInSeconds * 1000);
         customer.setBalance(customer.getBalance() - cost);
 
         Map<Product, Integer> amountProductsOrder = new HashMap<>();
@@ -70,6 +70,7 @@ public class SimpleOrdersService extends IOrdersService {
     public Boolean payShipment(Order order) {
         Customer customer = order.getCustomer().get(0);
         customer.setBalance(customer.getBalance() - order.getShipmentFees());
+        databaseService.increaseTemplateUsage(customer.getLanguage());
         return true;
     }
 

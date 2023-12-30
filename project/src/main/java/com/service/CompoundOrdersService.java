@@ -40,9 +40,8 @@ public class CompoundOrdersService extends IOrdersService {
             orders.add(simpleOrder);
         }
         
-        // create date equals to the current date + 20 seconds
         Date date = new Date();
-        date.setTime(date.getTime() + 20000);
+        date.setTime(date.getTime() + this.shipmentDurationInSeconds * 1000);
 
         Order order = new CompoundOrder(orders.toArray(new Order[0]), databaseService.getLastOrderId(), date);
         databaseService.increaseLastOrderId();

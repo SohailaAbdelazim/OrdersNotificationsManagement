@@ -13,9 +13,12 @@ import com.model.OrderCreation;
 public abstract class IOrdersService {
     protected IDatabaseService databaseService;
 
+    protected Integer shipmentDurationInSeconds = 20;
+
     @Autowired
     public IOrdersService(IDatabaseService databaseService) {
         this.databaseService = databaseService;
+        this.shipmentDurationInSeconds = 20;
     }
 
     public abstract Order createOrder(OrderCreation[] orderCreation);

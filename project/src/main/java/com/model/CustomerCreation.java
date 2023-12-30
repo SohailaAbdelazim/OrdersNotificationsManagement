@@ -8,8 +8,11 @@ public class CustomerCreation {
     private String language;
     private String location;
     private Double balance;
+    private String phoneNumber;
+    private String[] notificationMethods;
 
-    public CustomerCreation(String username, String password, String name, String email, String language, String location, Double balance) {
+    public CustomerCreation(String username, String password, String name, String email, String language,
+            String location, Double balance, String phoneNumber, String[] notificationMethods) {
         this.username = username;
         this.password = password;
         this.name = name;
@@ -17,6 +20,24 @@ public class CustomerCreation {
         this.language = language;
         this.location = location;
         this.balance = balance;
+        this.phoneNumber = phoneNumber;
+        this.notificationMethods = notificationMethods;
+    }
+
+    public String[] getNotificationMethods() {
+        return notificationMethods;
+    }
+
+    public void setNotificationMethods(String[] notificationMethods) {
+        this.notificationMethods = notificationMethods;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getUsername() {

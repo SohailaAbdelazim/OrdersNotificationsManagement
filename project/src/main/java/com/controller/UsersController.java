@@ -31,8 +31,34 @@ public class UsersController {
     private IValidationService validationService;
 
     @GetMapping("")
-    public Map<String, Customer> home() {
-        return databaseService.getCustomers();
+    public String home() {
+        // Pritn the instrctions for the user that can be done in this mapping
+        return "Welcome to the Users API!" +
+                "\n\nYou can use the following mappings:" +
+                "\n- GET /api/users - Get all users" +
+
+                "\n\n- Post /api/users/login - Login" +
+                "\n\t- Body: username, password" +
+                "\n\t\t- username: string" +
+                "\n\t\t- password: string" +
+
+                "\n\n- Post /api/users/signup - Signup" +
+                "\n\t- Body: username, password, name, email, language, location, balance, phone, notificationMethods" +
+                "\n\t\t- username: string" +
+                "\n\t\t- password: string" +
+                "\n\t\t- name: string" +
+                "\n\t\t- email: string" +
+                "\n\t\t- language: arabic | english" +
+                "\n\t\t- location: string" +
+                "\n\t\t- balance: double" +
+                "\n\t\t- phone: string" +
+                "\n\t\t- notificationMethods: string[]" +
+
+                "\n\n- Post /api/users/logout - Logout" +
+                "\n\t- Headers: username, password" +
+                "\n\t- Body: username, password" +
+                "\n\t\t- username: string" +
+                "\n\t\t- password: string";
     }
 
     @PostMapping("/login")

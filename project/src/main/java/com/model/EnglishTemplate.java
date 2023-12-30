@@ -22,4 +22,9 @@ public class EnglishTemplate extends Template {
                 "Thank you for using our services.\n" +
                 "Best regards,\n";
     }
+
+    @Override
+    public String toString() {
+        return "English Tempalte";
+    }
 }
