@@ -20,8 +20,10 @@ public class SimpleOrdersService extends IOrdersService {
 
     @Override
     public Order createOrder(OrderCreation[] orderCreation) {
-
         Order order = untilCreateSimpleOrder(orderCreation);
+        if(order == null){
+            return null ;
+        }
         databaseService.insertNewOrder(order);
         databaseService.increaseLastOrderId();
         return order;

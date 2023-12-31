@@ -34,7 +34,7 @@ public class CompoundOrdersService extends IOrdersService {
             OrderCreation[] newSimpleOrder = new OrderCreation[1];
             newSimpleOrder[0] = order;
             Order simpleOrder = untilCreateSimpleOrder(newSimpleOrder);
-            if (order == null) {
+            if (simpleOrder == null) {
                 return null;
             }
             orders.add(simpleOrder);
