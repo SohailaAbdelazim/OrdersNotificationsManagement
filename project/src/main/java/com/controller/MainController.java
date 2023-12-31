@@ -58,7 +58,6 @@ public class MainController {
                 "\n\n" + "v".repeat(60) +
                 "\n" + "-".repeat(24) + " Users API " + "-".repeat(24) +
                 "\n" + "^".repeat(60) +
-                "\n- GET /api/users - Get all users" +
 
                 "\n\n- Post /api/users/login - Login" +
                 "\n\t- Body: username, password" +

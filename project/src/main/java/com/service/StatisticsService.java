@@ -23,9 +23,10 @@ public class StatisticsService implements IStatisticsService{
             if(customer.getNumberOfOrders() > bestCustomerCount) {
                 bestCustomerCount = customer.getNumberOfOrders();
                 bestCustomer = new Vector<>();
-                bestCustomer.add(customer.getEmail());
+                bestCustomer.add(customer.getEmail() + " | " + customer.getPhoneNumber());
             } else if (customer.getNumberOfOrders() == bestCustomerCount) {
-                bestCustomer.add(customer.getEmail());
+                bestCustomer.add(customer.getEmail() + " | " + customer.getPhoneNumber());
+
             }
         }
         return bestCustomer.toArray(new String[bestCustomer.size()]);

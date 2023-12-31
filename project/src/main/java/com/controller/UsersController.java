@@ -35,7 +35,6 @@ public class UsersController {
         // Pritn the instrctions for the user that can be done in this mapping
         return "Welcome to the Users API!" +
                 "\n\nYou can use the following mappings:" +
-                "\n- GET /api/users - Get all users" +
 
                 "\n\n- Post /api/users/login - Login" +
                 "\n\t- Body: username, password" +
